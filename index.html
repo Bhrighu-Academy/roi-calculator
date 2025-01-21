@@ -205,6 +205,7 @@
 </div>
 
 <script>
+  // Function to calculate ROI and update the output
   function calculateROI() {
     // Collect input values
     const hoursPerWeek = parseFloat(document.getElementById("hoursPerWeek").value);
@@ -275,6 +276,11 @@
       <p><strong>Predicted ROI:</strong> ${roi}%</p>
     `;
   }
+
+  // Add event listeners to inputs to automatically recalculate when any input changes
+  document.querySelectorAll('input, select').forEach(input => {
+    input.addEventListener('input', calculateROI);
+  });
 </script>
 
 </body>
