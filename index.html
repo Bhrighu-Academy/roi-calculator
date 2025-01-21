@@ -126,6 +126,13 @@
       margin-top: 30px;
     }
 
+    /* Error message */
+    .error-message {
+      color: red;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .calculator-container {
@@ -153,23 +160,27 @@
 
   <!-- Input fields -->
   <div class="form-group">
-    <label for="hoursPerWeek">Hours You Can Spend per Week</label>
-    <input type="number" id="hoursPerWeek" placeholder="Enter number of hours" />
+    <label for="hoursPerWeek">Hours You Can Spend per Week (Min: 10, Max: 30)</label>
+    <input type="number" id="hoursPerWeek" placeholder="Enter number of hours" min="10" max="30" />
+    <div id="hoursError" class="error-message"></div>
   </div>
   
   <div class="form-group">
-    <label for="courseFee">Course Fee (INR)</label>
-    <input type="number" id="courseFee" placeholder="Enter course fee in INR" />
+    <label for="courseFee">Course Fee (INR) (Min: ₹10,000, Max: ₹25,00,000)</label>
+    <input type="number" id="courseFee" placeholder="Enter course fee in INR" min="10000" max="2500000" />
+    <div id="courseFeeError" class="error-message"></div>
   </div>
 
   <div class="form-group">
-    <label for="currentSalary">Current Annual Salary (INR)</label>
-    <input type="number" id="currentSalary" placeholder="Enter your current salary in INR" />
+    <label for="currentSalary">Current Annual Salary (INR) (Min: ₹20,000, Max: ₹1,00,00,000)</label>
+    <input type="number" id="currentSalary" placeholder="Enter your current salary in INR" min="20000" max="10000000" />
+    <div id="currentSalaryError" class="error-message"></div>
   </div>
 
   <div class="form-group">
-    <label for="expectedSalary">Expected Annual Salary After Completion (INR)</label>
-    <input type="number" id="expectedSalary" placeholder="Enter expected salary in INR" />
+    <label for="expectedSalary">Expected Annual Salary After Completion (INR) (Min: ₹30,000, Max: ₹1,50,00,000)</label>
+    <input type="number" id="expectedSalary" placeholder="Enter expected salary in INR" min="30000" max="15000000" />
+    <div id="expectedSalaryError" class="error-message"></div>
   </div>
 
   <div class="form-group">
@@ -207,6 +218,9 @@
 <script>
   // Function to calculate ROI and update the output
   function calculateROI() {
+    // Reset error messages
+    resetErrors();
+
     // Collect input values
     const hoursPerWeek = parseFloat(document.getElementById("hoursPerWeek").value);
     const courseFee = parseFloat(document.getElementById("courseFee").value);
@@ -214,9 +228,35 @@
     const expectedSalary = parseFloat(document.getElementById("expectedSalary").value);
     const jobRole = document.getElementById("jobRole").value.trim();
 
-    // Check if all required fields are filled
-    if (isNaN(hoursPerWeek) || isNaN(courseFee) || isNaN(currentSalary) || isNaN(expectedSalary) || !jobRole) {
-      alert("Please fill in all fields with valid values.");
+    // Validate inputs
+    let isValid = true;
+
+    if (isNaN(hoursPerWeek) || hoursPerWeek < 10 || hoursPerWeek > 30) {
+      showError("hoursError", "Please enter a value between 10 and 30.");
+      isValid = false;
+    }
+
+    if (isNaN(courseFee) || courseFee < 10000 || courseFee > 2500000) {
+      showError("courseFeeError", "Course Fee must be between ₹10,000 and ₹2,500,000.");
+      isValid = false;
+    }
+
+    if (isNaN(currentSalary) || currentSalary < 20000 || currentSalary > 10000000) {
+      showError("currentSalaryError", "Current Salary must be between ₹20,000 and ₹10,000,000.");
+      isValid = false;
+    }
+
+    if (isNaN(expectedSalary) || expectedSalary < 30000 || expectedSalary > 15000000) {
+      showError("expectedSalaryError", "Expected Salary must be between ₹30,000 and ₹15,000,000.");
+      isValid = false;
+    }
+
+    if (!jobRole) {
+      alert("Please select a job role.");
+      isValid = false;
+    }
+
+    if (!isValid) {
       return;
     }
 
@@ -261,7 +301,7 @@
     }
 
     // Calculate dynamic time to complete the course based on hours per week
-    const hoursRequiredToCompleteCourse = 500; // Example: Assumed total hours required for the course
+    const hoursRequiredToCompleteCourse = 1000; // Example: Assumed total hours required for the course
     const dynamicWeeksToComplete = Math.ceil(hoursRequiredToCompleteCourse / hoursPerWeek);
 
     // Check if salary increase is realistic
@@ -279,6 +319,19 @@
       <p><strong>Predicted Salary Increase:</strong> ₹${predictedSalaryIncrease.toFixed(2)}</p>
       <p><strong>Predicted ROI:</strong> ${roi}%</p>
     `;
+  }
+
+  // Function to show error messages
+  function showError(elementId, message) {
+    document.getElementById(elementId).innerText = message;
+  }
+
+  // Function to reset error messages
+  function resetErrors() {
+    document.getElementById("hoursError").innerText = "";
+    document.getElementById("courseFeeError").innerText = "";
+    document.getElementById("currentSalaryError").innerText = "";
+    document.getElementById("expectedSalaryError").innerText = "";
   }
 </script>
 
