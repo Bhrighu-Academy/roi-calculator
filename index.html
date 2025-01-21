@@ -214,8 +214,8 @@
     const jobRole = document.getElementById("jobRole").value.trim();
 
     // Check if all required fields are filled
-    if (!hoursPerWeek || !courseFee || !currentSalary || !expectedSalary || !jobRole) {
-      alert("Please fill in all fields.");
+    if (isNaN(hoursPerWeek) || isNaN(courseFee) || isNaN(currentSalary) || isNaN(expectedSalary) || !jobRole) {
+      alert("Please fill in all fields with valid values.");
       return;
     }
 
@@ -226,7 +226,7 @@
     // Role-based prediction for salary increase and weeks to complete
     switch(jobRole) {
       case "Data Scientist":
-        predictedSalaryIncrease = (expectedSalary - currentSalary);
+        predictedSalaryIncrease = expectedSalary - currentSalary;
         predictedWeeksToComplete = 16;
         break;
       case "Data Analyst":
@@ -254,14 +254,21 @@
         predictedWeeksToComplete = 24;
         break;
       default:
-        predictedSalaryIncrease = (expectedSalary - currentSalary);
+        predictedSalaryIncrease = expectedSalary - currentSalary;
         predictedWeeksToComplete = 16;
         break;
     }
 
-    // Predicted ROI
+    // Check if salary increase is realistic
+    if (predictedSalaryIncrease < 0) {
+      alert("Expected salary should be greater than the current salary.");
+      return;
+    }
+
+    // Calculate ROI
     const roi = ((predictedSalaryIncrease / courseFee) * 100).toFixed(2);
 
+    // Display the output
     document.getElementById("output").innerHTML = `
       <p><strong>Predicted Time to Complete the Course:</strong> ${predictedWeeksToComplete} weeks</p>
       <p><strong>Predicted Salary Increase:</strong> ₹${predictedSalaryIncrease.toFixed(2)}</p>
