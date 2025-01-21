@@ -277,10 +277,12 @@
     `;
   }
 
-  // Add event listeners to inputs to automatically recalculate when any input changes
-  document.querySelectorAll('input, select').forEach(input => {
-    input.addEventListener('input', calculateROI);
-  });
+  // Add event listeners to inputs to trigger calculation when the user finishes editing
+  document.getElementById("hoursPerWeek").addEventListener('blur', calculateROI);
+  document.getElementById("courseFee").addEventListener('blur', calculateROI);
+  document.getElementById("currentSalary").addEventListener('blur', calculateROI);
+  document.getElementById("expectedSalary").addEventListener('blur', calculateROI);
+  document.getElementById("jobRole").addEventListener('change', calculateROI);
 </script>
 
 </body>
